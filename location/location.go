@@ -1,6 +1,7 @@
 package location
 
 import (
+	"ebitenGame/camera"
 	"ebitenGame/config"
 	"ebitenGame/tiles"
 	"fmt"
@@ -41,13 +42,13 @@ func New(width int, height int) Location {
 	return loc
 }
 
-func (l Location) Draw(screen *ebiten.Image) {
+func (l Location) Draw(screen *ebiten.Image, cam *camera.Camera) {
 	step := tiles.Size
 	tiles.InitTiles()
 	for i := 0; i < l.Height; i++ {
 		for j := 0; j < l.Width; j++ {
 			op := &ebiten.DrawImageOptions{}
-			op.GeoM.Translate(float64(i*step), float64(j*step))
+			op.GeoM.Translate(float64(i*step)-cam.X, float64(j*step)-cam.Y)
 			//time.Sleep(100000000)
 			screen.DrawImage(tiles.Tile(l.Field[i][j].Sprite), op)
 		}

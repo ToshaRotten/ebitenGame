@@ -1,31 +1,34 @@
 package main
 
 import (
+	"ebitenGame/camera"
 	"ebitenGame/config"
 	"ebitenGame/location"
+	"ebitenGame/loger"
 	"ebitenGame/player"
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/sirupsen/logrus"
 	"log"
 )
 
 type Game struct{}
 
 var (
-	Log = logrus.New()
-	Loc = location.New(5, 5)
+	loc = location.New(50, 50)
+	cam = camera.New()
 	pl  = player.New()
 )
 
 func (g *Game) Update() error {
-	Log.Trace("Player choords: ", pl.X, pl.Y)
+	loger.L.Trace("Player choords: ", pl.X, pl.Y)
 	pl.Movment()
+	cam.UpdateCamera()
+	loger.L.Trace("Camera: ", cam.X, cam.Y, cam.Scale)
 	return nil
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
-	pl.Draw(screen)
-	//Loc.Draw(screen)
+	loc.Draw(screen, cam)
+	//pl.Draw(screen, cam)
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
@@ -33,15 +36,7 @@ func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeigh
 }
 
 func main() {
-	Log.Level = 5
-	//Log.Trace("6")
-	//Log.Debug("5")
-	//Log.Info("4")
-	//Log.Warning("3")
-	//Log.Error("2")
-	//Log.Fatal("1")
-	//Log.Panic("0")
-
+	loger.ConfigLoger()
 	ebiten.SetWindowSize(640, 480)
 	ebiten.SetWindowTitle("")
 	if err := ebiten.RunGame(&Game{}); err != nil {
