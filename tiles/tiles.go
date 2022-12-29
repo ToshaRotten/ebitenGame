@@ -2,6 +2,7 @@ package tiles
 
 import (
 	"bytes"
+	"ebitenGame/loger"
 	"github.com/hajimehoshi/ebiten/v2"
 	"image"
 	"io/ioutil"
@@ -13,11 +14,12 @@ const (
 )
 
 var (
+	Count = 50
 	Image *ebiten.Image
 )
 
 func InitTiles() {
-	file, err := ioutil.ReadFile("tiles/src/locationTileset.png")
+	file, err := ioutil.ReadFile("tiles/src/TilesNew.png")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -35,6 +37,11 @@ func toXY(number int) (int, int) {
 }
 
 func Tile(number int) *ebiten.Image {
+	loger.L.Trace(number)
+	if number > Count || number < 0 {
+		loger.L.Warning("Wrong tile")
+		number = 0
+	}
 	sx, sy := toXY(number)
 	tile := Image.SubImage(image.Rect(sx*Size, sy*Size, sx*Size+Size, sy*Size+Size)).(*ebiten.Image)
 	return tile

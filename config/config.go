@@ -1,6 +1,6 @@
 package config
 
 var (
-	ScreenWidth = 320
-	ScreenHeigh = 240
+	ScreenWidth = 1280
+	ScreenHeigh = 720
 )

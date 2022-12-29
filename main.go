@@ -13,7 +13,7 @@ import (
 type Game struct{}
 
 var (
-	loc = location.New(50, 50)
+	loc = location.New(10, 10)
 	cam = camera.New()
 	pl  = player.New()
 )
@@ -28,7 +28,7 @@ func (g *Game) Update() error {
 
 func (g *Game) Draw(screen *ebiten.Image) {
 	loc.Draw(screen, cam)
-	//pl.Draw(screen, cam)
+	pl.Draw(screen, cam)
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
@@ -37,7 +37,7 @@ func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeigh
 
 func main() {
 	loger.ConfigLoger()
-	ebiten.SetWindowSize(640, 480)
+	ebiten.SetWindowSize(config.ScreenWidth, config.ScreenHeigh)
 	ebiten.SetWindowTitle("")
 	if err := ebiten.RunGame(&Game{}); err != nil {
 		log.Fatal(err)

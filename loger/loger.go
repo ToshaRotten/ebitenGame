@@ -7,7 +7,7 @@ var (
 )
 
 func ConfigLoger() {
-	L.Level = 6
+	L.Level = 5
 	//Log.Trace("6")
 	//Log.Debug("5")
 	//Log.Info("4")
