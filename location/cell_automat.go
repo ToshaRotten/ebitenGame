@@ -5,6 +5,6 @@ type cell struct {
 	arrounCellsNumber int  // How many cells allive arround this cell
 }
 
-func (c *cell) CountNeighbours() int {
-
-}
+//func (c *cell) CountNeighbours() int {
+//
+//}

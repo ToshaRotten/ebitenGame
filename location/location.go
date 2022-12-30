@@ -8,6 +8,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/sirupsen/logrus"
+	"math/rand"
 )
 
 type Tile struct {
@@ -24,7 +25,7 @@ func New(width int, height int) Location {
 	var l Location
 	l.Width = width
 	l.Height = height
-	if l.Width*tiles.Size > config.ScreenWidth || l.Height*tiles.Size > config.ScreenHeigh {
+	if l.Width*tiles.Size > config.ScreenWidth || l.Height*tiles.Size > config.ScreenHeight {
 		logrus.Warn("size of number of tiles is bigger than screen sizes")
 	}
 	l.Field = make([][]Tile, width)
@@ -33,7 +34,7 @@ func New(width int, height int) Location {
 	}
 	for i := 0; i < height; i++ {
 		for j := 0; j < width; j++ {
-			l.Field[i][j].Sprite = 0
+			l.Field[i][j].Sprite = rand.Intn(50)
 		}
 	}
 	return l

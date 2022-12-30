@@ -37,7 +37,6 @@ func toXY(number int) (int, int) {
 }
 
 func Tile(number int) *ebiten.Image {
-	loger.L.Trace(number)
 	if number > Count || number < 0 {
 		loger.L.Warning("Wrong tile")
 		number = 0

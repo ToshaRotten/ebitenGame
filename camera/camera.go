@@ -13,8 +13,9 @@ type Camera struct {
 
 func New() *Camera {
 	return &Camera{
-		X: 0,
-		Y: 0,
+		X:     0,
+		Y:     0,
+		Scale: 0,
 	}
 }
 
