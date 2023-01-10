@@ -34,9 +34,16 @@ func New(width int, height int) Location {
 	}
 	for i := 0; i < height; i++ {
 		for j := 0; j < width; j++ {
-			l.Field[i][j].Sprite = rand.Intn(50)
+			rand := rand.Intn(50)
+			if rand < 1 || rand > 9 {
+				l.Field[i][j].Sprite = rand
+			} else {
+				l.Field[i][j].Sprite = 0
+			}
+
 		}
 	}
+	l.DebugPrint()
 	return l
 }
 
@@ -56,8 +63,8 @@ func (l Location) Draw(screen *ebiten.Image, cam *camera.Camera) {
 
 func (l Location) DebugPrint() {
 	for i := 0; i < l.Height; i++ {
-		for j := 0; i < l.Width; j++ {
-			fmt.Print(l.Field[i][j].Sprite)
+		for j := 0; j < l.Width; j++ {
+			fmt.Print(l.Field[j][i].Sprite)
 			fmt.Print(" ")
 		}
 		fmt.Println()
