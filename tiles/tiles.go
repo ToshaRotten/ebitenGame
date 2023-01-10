@@ -19,7 +19,7 @@ var (
 )
 
 func InitTiles() {
-	file, err := ioutil.ReadFile("tiles/src/TilesNew.png")
+	file, err := ioutil.ReadFile("tiles/src/Tiles.png")
 	if err != nil {
 		log.Fatal(err)
 	}

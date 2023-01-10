@@ -2,6 +2,8 @@ package player
 
 import (
 	"ebitenGame/camera"
+	"ebitenGame/config"
+	"ebitenGame/debug"
 	"ebitenGame/loger"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
@@ -67,5 +69,8 @@ func (p *Player) Draw(screen *ebiten.Image, cam *camera.Camera) {
 	op := &ebiten.DrawImageOptions{}
 	op.GeoM.Rotate(p.Rotate)
 	op.GeoM.Translate(p.X-cam.X, p.Y-cam.Y)
+	if config.ObjectDebug == 1 {
+		debug.Rect(p.Image, p.X, p.Y)
+	}
 	screen.DrawImage(p.Image, op)
 }
