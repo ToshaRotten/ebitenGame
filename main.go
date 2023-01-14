@@ -3,6 +3,7 @@ package main
 import (
 	"ebitenGame/camera"
 	"ebitenGame/config"
+	"ebitenGame/editor"
 	"ebitenGame/location"
 	"ebitenGame/loger"
 	"ebitenGame/player"
@@ -14,19 +15,27 @@ import (
 type Game struct{}
 
 var (
-	u   = unit.New()
-	loc = location.New(config.LocationSize, config.LocationSize)
-	cam = camera.New()
-	pl  = player.New()
+	mode = "MAP"
+	edit = editor.New()
+	u    = unit.New()
+	loc  = location.New(config.LocationSize, config.LocationSize)
+	cam  = camera.New()
+	pl   = player.New()
 )
 
 func (g *Game) Update() error {
 
-	mode := "START"
 	if mode == "MENU" {
 
 	}
-	if mode == "START" {
+	if mode == "MAP" {
+		loc = edit.Update(loc, cam)
+		loger.L.Trace("Camera: ", cam.X, cam.Y, cam.Scale)
+
+		cam.UpdateCamera()
+
+	}
+	if mode == "GAME" {
 		loger.L.Trace("Player: ", pl.X, pl.Y, pl.Rotate)
 		pl.Movement()
 		cam.X = pl.X - float64(config.ScreenWidth)/2
@@ -44,10 +53,15 @@ func (g *Game) Update() error {
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
-
-	loc.Draw(screen, cam)
-	u.Draw(screen, cam)
-	pl.Draw(screen, cam)
+	if mode == "MAP" {
+		loc.Draw(screen, cam)
+		edit.Draw(screen)
+	}
+	if mode == "GAME" {
+		loc.Draw(screen, cam)
+		u.Draw(screen, cam)
+		pl.Draw(screen, cam)
+	}
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
