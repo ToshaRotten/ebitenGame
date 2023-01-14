@@ -9,6 +9,11 @@ import (
 	"log"
 )
 
+type Tile struct {
+	SpriteNumber int
+	Image        *ebiten.Image
+}
+
 const (
 	Size = 32
 )
@@ -36,12 +41,14 @@ func toXY(number int) (int, int) {
 	return x, y
 }
 
-func Tile(number int) *ebiten.Image {
+func ByNumber(number int) *ebiten.Image {
 	if number > Count || number < 0 {
 		loger.L.Warning("Wrong tile")
 		number = 0
+	} else {
+		sx, sy := toXY(number)
+		tile := Image.SubImage(image.Rect(sx*Size, sy*Size, sx*Size+Size, sy*Size+Size)).(*ebiten.Image)
+		return tile
 	}
-	sx, sy := toXY(number)
-	tile := Image.SubImage(image.Rect(sx*Size, sy*Size, sx*Size+Size, sy*Size+Size)).(*ebiten.Image)
-	return tile
+	return nil
 }
