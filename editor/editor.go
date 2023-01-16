@@ -41,17 +41,25 @@ func (e *Editor) Update(l *location.Location, cam *camera.Camera) *location.Loca
 		time.Sleep(10000000)
 		e.SelectedTile += 1
 	}
-	if inpututil.IsKeyJustPressed(ebiten.KeyS) {
+	_, wy := ebiten.Wheel()
+	if wy > 0 {
+		e.SelectedTile += 1
+	}
+	if wy < 0 {
+		e.SelectedTile -= 1
+	}
+
+	if inpututil.IsKeyJustPressed(ebiten.KeyS) && ebiten.IsKeyPressed(ebiten.KeyControlLeft) {
 		l.SaveToFile("location/", "test.loc")
 	}
-	if inpututil.IsKeyJustPressed(ebiten.KeyL) {
+	if inpututil.IsKeyJustPressed(ebiten.KeyL) && ebiten.IsKeyPressed(ebiten.KeyControlLeft) {
 		l.LoadFromFile("location/", "test.loc")
 	}
 	mouse.X, mouse.Y = ebiten.CursorPosition()
 	if ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft) {
 		x := (mouse.X + int(cam.X)) / 32
 		y := (mouse.Y + int(cam.Y)) / 32
-		if u.InRange(0, c.LocationSize, x) && u.InRange(0, c.LocationSize, y) {
+		if u.InRange(0, c.LocationSize-1, x) && u.InRange(0, c.LocationSize-1, y) {
 			l.Field[x][y].SpriteNumber = e.SelectedTile
 		}
 	}
@@ -59,7 +67,6 @@ func (e *Editor) Update(l *location.Location, cam *camera.Camera) *location.Loca
 }
 
 func (e *Editor) Draw(screen *ebiten.Image) {
-
 	for i := 0; i < tiles.Count; i++ {
 		op := &ebiten.DrawImageOptions{}
 		op.GeoM.Translate(float64(i*32-e.SelectedTile*32), 0)
