@@ -2,28 +2,20 @@ package editor
 
 import (
 	"ebitenGame/camera"
-	c "ebitenGame/config"
+	G "ebitenGame/globals"
 	"ebitenGame/location"
 	"ebitenGame/tiles"
 	u "ebitenGame/utils"
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
-	"strconv"
-	"time"
 )
 
 type Editor struct {
 	SelectedTile int
 }
 
-type Mouse struct {
-	X int
-	Y int
-}
-
 var (
-	mouse Mouse
+	EDITOR = New()
 )
 
 func New() *Editor {
@@ -33,21 +25,6 @@ func New() *Editor {
 }
 
 func (e *Editor) Update(l *location.Location, cam *camera.Camera) *location.Location {
-	if inpututil.IsKeyJustPressed(ebiten.KeyQ) {
-		time.Sleep(10000000)
-		e.SelectedTile -= 1
-	}
-	if inpututil.IsKeyJustPressed(ebiten.KeyE) {
-		time.Sleep(10000000)
-		e.SelectedTile += 1
-	}
-	_, wy := ebiten.Wheel()
-	if wy > 0 {
-		e.SelectedTile += 1
-	}
-	if wy < 0 {
-		e.SelectedTile -= 1
-	}
 
 	if inpututil.IsKeyJustPressed(ebiten.KeyS) && ebiten.IsKeyPressed(ebiten.KeyControlLeft) {
 		l.SaveToFile("location/", "test.loc")
@@ -55,11 +32,11 @@ func (e *Editor) Update(l *location.Location, cam *camera.Camera) *location.Loca
 	if inpututil.IsKeyJustPressed(ebiten.KeyL) && ebiten.IsKeyPressed(ebiten.KeyControlLeft) {
 		l.LoadFromFile("location/", "test.loc")
 	}
-	mouse.X, mouse.Y = ebiten.CursorPosition()
+	G.MOUSE.X, G.MOUSE.Y = ebiten.CursorPosition()
 	if ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft) {
-		x := (mouse.X + int(cam.X)) / 32
-		y := (mouse.Y + int(cam.Y)) / 32
-		if u.InRange(0, c.LocationSize-1, x) && u.InRange(0, c.LocationSize-1, y) {
+		x := (G.MOUSE.X + int(cam.X)) / 32
+		y := (G.MOUSE.Y + int(cam.Y)) / 32
+		if u.InRange(0, G.LocationSize-1, x) && u.InRange(0, G.LocationSize-1, y) {
 			l.Field[x][y].SpriteNumber = e.SelectedTile
 		}
 	}
@@ -72,5 +49,4 @@ func (e *Editor) Draw(screen *ebiten.Image) {
 		op.GeoM.Translate(float64(i*32-e.SelectedTile*32), 0)
 		screen.DrawImage(tiles.ByNumber(i), op)
 	}
-	ebitenutil.DebugPrint(screen, "\n"+strconv.Itoa(e.SelectedTile))
 }
