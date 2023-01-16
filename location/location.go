@@ -35,9 +35,9 @@ func New(width int, height int) *Location {
 	}
 	for i := 0; i < height; i++ {
 		for j := 0; j < width; j++ {
-			rand := rand.Intn(50)
-			if rand < 1 || rand > 9 {
-				l.Field[i][j].SpriteNumber = rand
+			random := rand.Intn(50)
+			if random < 1 || random > 9 {
+				l.Field[i][j].SpriteNumber = random
 			} else {
 				l.Field[i][j].SpriteNumber = 0
 			}
@@ -78,13 +78,23 @@ func (l *Location) SaveToFile(path string, filename string) {
 	if err != nil {
 		log.L.Error("Unable to create file")
 	}
-
-	defer file.Close()
+	defer func() {
+		err = file.Close()
+		if err != nil {
+			log.L.Error(err)
+		}
+	}()
 	for i := 0; i < l.Height; i++ {
 		for j := 0; j < l.Width; j++ {
-			file.WriteString(strconv.Itoa(l.Field[j][i].SpriteNumber) + ",")
+			_, err = file.WriteString(strconv.Itoa(l.Field[j][i].SpriteNumber) + ",")
+			if err != nil {
+				log.L.Error(err)
+			}
 		}
-		file.WriteString("\n")
+		_, err = file.WriteString("\n")
+		if err != nil {
+			log.L.Error(err)
+		}
 	}
 	log.L.Info("Location is saved")
 }
@@ -93,7 +103,12 @@ func (l *Location) LoadFromFile(path string, filename string) *Location {
 	if err != nil {
 		log.L.Error("Unable to open file")
 	}
-	defer file.Close()
+	defer func() {
+		err = file.Close()
+		if err != nil {
+			log.L.Error(err)
+		}
+	}()
 	var res []string
 	data := make([]byte, 64)
 	for {
