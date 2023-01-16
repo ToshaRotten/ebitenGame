@@ -1,4 +1,4 @@
-package ui
+package elements
 
 import (
 	l "ebitenGame/loger"
@@ -18,6 +18,22 @@ var (
 	FontSize = 18
 	FileName = "font.ttf"
 )
+
+type UI struct {
+	Buttons []*Button
+	Labels  []*Label
+	Inputs  []*Input
+	Scrolls []*Scroll
+}
+
+func (m *UI) Draw(screen *ebiten.Image) {
+	for i := 0; i < len(m.Buttons); i++ {
+		m.Buttons[i].Draw(screen)
+	}
+	for i := 0; i < len(m.Labels); i++ {
+		m.Labels[i].Draw(screen)
+	}
+}
 
 type Button struct {
 	Width           int
@@ -69,9 +85,10 @@ type Label struct {
 	BackgroundColor color.RGBA
 	FontFace        font.Face
 	Visible         bool
+	FontSize        int
 }
 
-func NewLabel(width int, height int, x float64, y float64, text string, color color.RGBA) *Label {
+func NewLabel(width int, height int, x float64, y float64, text string, fontsize int, color color.RGBA) *Label {
 	return &Label{
 		Width:    width,
 		Height:   height,
@@ -81,6 +98,7 @@ func NewLabel(width int, height int, x float64, y float64, text string, color co
 		Visible:  true,
 		FontFace: GetFont(),
 		Color:    color,
+		FontSize: fontsize,
 	}
 }
 func NewDefaultLabel(x float64, y float64, text string) *Label {
@@ -115,6 +133,33 @@ type Input struct {
 	FontFace        font.Face
 	Visible         bool
 	OnClick         func()
+}
+
+type Scroll struct {
+	X               float64
+	Y               float64
+	Width           float64
+	Height          float64
+	Visible         float64
+	BackgroundColor color.RGBA
+	Items           []int
+	Selector        int
+	OnClick         func()
+}
+
+func NewScroll() *Scroll {
+	return &Scroll{}
+}
+
+func (s *Scroll) Update() *Scroll {
+	_, wy := ebiten.Wheel()
+	if wy > 0 {
+		s.Selector += 1
+	}
+	if wy < 0 {
+		s.Selector -= 1
+	}
+	return s
 }
 
 func NewInput(width int, height int, x float64, y float64, text string, bgcolor color.RGBA, color color.RGBA, onclick func()) *Input {
