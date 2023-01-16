@@ -2,8 +2,8 @@ package player
 
 import (
 	"ebitenGame/camera"
-	c "ebitenGame/config"
 	"ebitenGame/debug"
+	c "ebitenGame/globals"
 	"ebitenGame/loger"
 	"ebitenGame/utils"
 	"github.com/hajimehoshi/ebiten/v2"
@@ -13,11 +13,12 @@ import (
 )
 
 type Player struct {
-	X       float64
-	Y       float64
-	Rotate  float64
-	Image   *ebiten.Image
-	Visible bool
+	X         float64
+	Y         float64
+	Rotate    float64
+	Image     *ebiten.Image
+	Visible   bool
+	Transform bool
 }
 
 type Mouse struct {

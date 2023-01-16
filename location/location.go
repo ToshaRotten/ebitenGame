@@ -2,7 +2,7 @@ package location
 
 import (
 	"ebitenGame/camera"
-	"ebitenGame/config"
+	"ebitenGame/globals"
 	log "ebitenGame/loger"
 	"ebitenGame/tiles"
 	"fmt"
@@ -26,7 +26,7 @@ func New(width int, height int) *Location {
 	var l Location
 	l.Width = width
 	l.Height = height
-	if l.Width*tiles.Size > config.ScreenWidth || l.Height*tiles.Size > config.ScreenHeight {
+	if l.Width*tiles.Size > globals.ScreenWidth || l.Height*tiles.Size > globals.ScreenHeight {
 		logrus.Warn("size of number of tiles is bigger than screen sizes")
 	}
 	l.Field = make([][]tiles.Tile, width)
@@ -44,7 +44,7 @@ func New(width int, height int) *Location {
 
 		}
 	}
-	if config.LogLevel == logrus.Level(6) {
+	if globals.LogLevel == logrus.Level(6) {
 		l.DebugPrint()
 	}
 	return &l
@@ -125,7 +125,7 @@ func (l *Location) LoadFromFile(path string, filename string) *Location {
 
 	for i := 0; i < l.Height; i++ {
 		for j := 0; j < l.Width; j++ {
-			l.Field[j][i].SpriteNumber, err = strconv.Atoi(n[j+(i*config.LocationSize)])
+			l.Field[j][i].SpriteNumber, err = strconv.Atoi(n[j+(i*globals.LocationSize)])
 		}
 	}
 	log.L.Info("Location is loaded")

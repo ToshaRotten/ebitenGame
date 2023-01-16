@@ -2,8 +2,8 @@ package unit
 
 import (
 	"ebitenGame/camera"
-	"ebitenGame/config"
 	"ebitenGame/debug"
+	"ebitenGame/globals"
 	"ebitenGame/loger"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
@@ -42,7 +42,7 @@ func (u *Unit) Movement() *Unit {
 func (u *Unit) Draw(screen *ebiten.Image, cam *camera.Camera) {
 	op := &ebiten.DrawImageOptions{}
 	op.GeoM.Translate(u.X-cam.X, u.Y-cam.Y)
-	if config.ObjectDebug == 1 {
+	if globals.ObjectDebug == 1 {
 		debug.Rect(u.Type.Sprite, u.X, u.Y)
 	}
 	screen.DrawImage(u.Type.Sprite, op)

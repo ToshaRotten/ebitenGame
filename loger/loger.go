@@ -1,7 +1,7 @@
 package loger
 
 import (
-	"ebitenGame/config"
+	"ebitenGame/globals"
 	"github.com/sirupsen/logrus"
 )
 
@@ -10,7 +10,7 @@ var (
 )
 
 func ConfigLoger() {
-	L.Level = config.LogLevel
+	L.Level = globals.LogLevel
 	//Log.Trace("6")
 	//Log.Debug("5")
 	//Log.Info("4")

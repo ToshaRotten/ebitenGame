@@ -1,8 +1,8 @@
 package camera
 
 import (
+	"ebitenGame/globals"
 	"ebitenGame/loger"
-	"ebitenGame/ui/menu"
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
@@ -22,7 +22,7 @@ func New() *Camera {
 
 func (c *Camera) UpdateCamera() *Camera {
 	loger.L.Trace("Update camera pos")
-	if menu.Mode == "EDITOR" {
+	if globals.UI_MODE == "EDITOR" {
 		if ebiten.IsKeyPressed(ebiten.KeyA) {
 			c.X -= 5
 		}
