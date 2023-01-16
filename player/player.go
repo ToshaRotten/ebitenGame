@@ -2,9 +2,10 @@ package player
 
 import (
 	"ebitenGame/camera"
-	"ebitenGame/config"
+	c "ebitenGame/config"
 	"ebitenGame/debug"
 	"ebitenGame/loger"
+	"ebitenGame/utils"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/sirupsen/logrus"
@@ -12,10 +13,11 @@ import (
 )
 
 type Player struct {
-	X      float64
-	Y      float64
-	Rotate float64
-	Image  *ebiten.Image
+	X       float64
+	Y       float64
+	Rotate  float64
+	Image   *ebiten.Image
+	Visible bool
 }
 
 type Mouse struct {
@@ -29,26 +31,29 @@ var (
 
 func New() *Player {
 	var err error
-	var pl Player
-	pl.Image, _, err = ebitenutil.NewImageFromFile("sprites/player.png")
+	var p Player
+	p.Visible = true
+	p.Image, _, err = ebitenutil.NewImageFromFile("sprites/player.png")
 	if err != nil {
 		logrus.Fatal(err)
 	}
-	return &pl
+	return &p
 }
 
 func (p *Player) Movement() *Player {
-	if ebiten.IsKeyPressed(ebiten.KeyW) {
-		p.Y -= 5
-	}
-	if ebiten.IsKeyPressed(ebiten.KeyS) {
-		p.Y += 5
-	}
-	if ebiten.IsKeyPressed(ebiten.KeyD) {
-		p.X += 5
-	}
-	if ebiten.IsKeyPressed(ebiten.KeyA) {
-		p.X -= 5
+	if utils.InRange(0, c.LocationSize*32, int(p.X)) && utils.InRange(0, c.LocationSize*32, int(p.Y)) {
+		if ebiten.IsKeyPressed(ebiten.KeyW) {
+			p.Y -= 5
+		}
+		if ebiten.IsKeyPressed(ebiten.KeyS) {
+			p.Y += 5
+		}
+		if ebiten.IsKeyPressed(ebiten.KeyD) {
+			p.X += 5
+		}
+		if ebiten.IsKeyPressed(ebiten.KeyA) {
+			p.X -= 5
+		}
 	}
 	return p
 }
@@ -66,10 +71,13 @@ func (p *Player) MovementToMouse(cam *camera.Camera) *Player {
 }
 
 func (p *Player) Draw(screen *ebiten.Image, cam *camera.Camera) {
+	if !p.Visible {
+		return
+	}
 	op := &ebiten.DrawImageOptions{}
 	op.GeoM.Rotate(p.Rotate)
 	op.GeoM.Translate(p.X-cam.X, p.Y-cam.Y)
-	if config.ObjectDebug == 1 {
+	if c.ObjectDebug == 1 {
 		debug.Rect(p.Image, p.X, p.Y)
 	}
 	screen.DrawImage(p.Image, op)
