@@ -1,4 +1,7 @@
 <h1> Game written by ebiten engine</h1>
+
+<img src="![img.png](img.png)"
+
 <p>Open-source real time strategy game like Herzog Zwei or something else</p>
 
 <h3>Информация для русскоязычной аудитории</h3>
