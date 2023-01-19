@@ -24,6 +24,7 @@ type Location struct {
 
 func New(width int, height int) *Location {
 	var l Location
+	tiles.InitTiles()
 	l.Width = width
 	l.Height = height
 	if l.Width*tiles.Size > globals.ScreenWidth || l.Height*tiles.Size > globals.ScreenHeight {
@@ -52,7 +53,7 @@ func New(width int, height int) *Location {
 
 func (l Location) Draw(screen *ebiten.Image, cam *camera.Camera) {
 	step := tiles.Size
-	tiles.InitTiles()
+	//tiles.InitTiles()
 	for i := 0; i < l.Height; i++ {
 		for j := 0; j < l.Width; j++ {
 			op := &ebiten.DrawImageOptions{}
