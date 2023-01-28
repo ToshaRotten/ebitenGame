@@ -25,7 +25,6 @@ func New() *Editor {
 }
 
 func (e *Editor) Update(l *location.Location, cam *camera.Camera) *location.Location {
-
 	if inpututil.IsKeyJustPressed(ebiten.KeyS) && ebiten.IsKeyPressed(ebiten.KeyControlLeft) {
 		l.SaveToFile("location/", "test.loc")
 	}
