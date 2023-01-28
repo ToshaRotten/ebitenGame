@@ -5,9 +5,11 @@ import (
 	"ebitenGame/debug"
 	c "ebitenGame/globals"
 	"ebitenGame/loger"
+	"ebitenGame/objects"
 	"ebitenGame/utils"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
+	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/sirupsen/logrus"
 	"math"
 )
@@ -17,6 +19,7 @@ type Player struct {
 	Y         float64
 	Rotate    float64
 	Image     *ebiten.Image
+	TakeUnit  bool
 	Visible   bool
 	Transform bool
 }
@@ -55,6 +58,9 @@ func (p *Player) Movement() *Player {
 		if ebiten.IsKeyPressed(ebiten.KeyA) {
 			p.X -= 5
 		}
+	} else {
+		p.Y = 100
+		p.X = 100
 	}
 	return p
 }
@@ -69,6 +75,40 @@ func (p *Player) MovementToMouse(cam *camera.Camera) *Player {
 	p.Rotate = math.Atan2(relationY, relationX)
 	loger.L.Trace(p.Rotate)
 	return p
+}
+
+func (p *Player) ColisionWithBase(objs *objects.Objects) bool {
+	for i := 0; i < len(objs.Instances); i++ {
+		if objs.Instances[i].Type.Name == "SBase" {
+			if utils.InRange(int(p.X), int(p.X+32), int(objs.Instances[i].X)) && utils.InRange(int(p.Y), int(p.Y+32), int(objs.Instances[i].Y)) {
+				return true
+			}
+		}
+	}
+	return false
+}
+
+func (p *Player) ColisionWithAny(objs *objects.Objects) bool {
+	for i := 0; i < len(objs.Instances); i++ {
+		if utils.InRange(int(p.X), int(p.X+32), int(objs.Instances[i].X)) && utils.InRange(int(p.Y), int(p.Y+32), int(objs.Instances[i].Y)) {
+			return true
+		}
+	}
+	return false
+}
+
+func (p *Player) ColisionWithInstance(inst *objects.Instance) bool {
+	if utils.InRange(int(p.X), int(p.X+32), int(inst.X)) && utils.InRange(int(p.Y), int(p.Y+32), int(inst.Y)) {
+		return true
+	}
+	return false
+}
+
+func (p *Player) PlaceUnit() bool {
+	if inpututil.IsKeyJustPressed(ebiten.KeySpace) && p.TakeUnit == true {
+		return true
+	}
+	return false
 }
 
 func (p *Player) Draw(screen *ebiten.Image, cam *camera.Camera) {
