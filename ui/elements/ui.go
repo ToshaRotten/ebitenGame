@@ -140,10 +140,10 @@ type Scroll struct {
 	Y               float64
 	Width           float64
 	Height          float64
-	Visible         float64
 	BackgroundColor color.RGBA
-	Items           []int
+	Items           []*ebiten.Image
 	Selector        int
+	Count           int
 	OnClick         func()
 }
 
@@ -160,6 +160,14 @@ func (s *Scroll) Update() *Scroll {
 		s.Selector -= 1
 	}
 	return s
+}
+
+func (s *Scroll) Draw(screen *ebiten.Image) {
+	for i := 0; i < s.Count; i++ {
+		op := &ebiten.DrawImageOptions{}
+		op.GeoM.Translate(float64(i*32-s.Count*32), 0)
+		screen.DrawImage(s.Items[i], op)
+	}
 }
 
 func NewInput(width int, height int, x float64, y float64, text string, bgcolor color.RGBA, color color.RGBA, onclick func()) *Input {
